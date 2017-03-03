@@ -72,4 +72,21 @@ router.get('/api/:collectionName/:key', function(req, res) {
 	})
 })
 
+
+// 특정 이름 조회
+router.post('/api/write',(req, res, next) => {
+	// 1.넘어온 값을 받는다.
+
+	var title = req.body.title;
+	var contents = req.body.contents;
+	
+	
+	var json = {
+		"result":"success"
+	}
+	res.json(json);
+	
+	console.log("title : "+title+" contents : "+contents); 
+})
+
 module.exports = router;
