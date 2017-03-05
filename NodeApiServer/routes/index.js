@@ -73,7 +73,7 @@ router.get('/api/:collectionName/:key', function(req, res) {
 })
 
 
-// 특정 이름 조회
+// 글 저장하기
 router.post('/api/write',(req, res, next) => {
 	// 1.넘어온 값을 받는다.
 

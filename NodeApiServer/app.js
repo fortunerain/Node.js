@@ -16,20 +16,15 @@ app.use(bodyParser.json());
 
 //sapui5 에서 호출하면 크로스도메인 문제로 인해 호출이 되지 않는다. 헤더 설정 필요
 app.use(function (req, res, next) {
-
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,x-id');
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
-
     // Pass to next layer of middleware
     next();
 });
