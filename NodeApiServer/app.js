@@ -1,20 +1,14 @@
 //index.js
-const express = require('express')
-	app = express(),
-    port = process.env.PORT || 3000;
-//    publicPath = '/sapui5',
-//    directory = __dirname + publicPath;
+const express = require('express');
+const app = express();
+const port = 3000;
 
-//크로스 도메인 문제로 제공하는 모듈인데 사용하면 해당 도메인에 요청을 못한다. 응답이 없다.
-//var cors    = require('cors');
-//app.use(cors);
-
+//POST 데이터 처리. res.json()
 var bodyParser  = require('body-parser');
-var mongoose    = require('mongoose');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//sapui5 에서 호출하면 크로스도메인 문제로 인해 호출이 되지 않는다. 헤더 설정 필요
+//CORS
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
@@ -30,25 +24,14 @@ app.use(function (req, res, next) {
 });
 
 
-
-
-// set default mime type to xml for ".library" files
-express.static.mime.default_type = "text/xml";
-// app.param('collectionName', function(req, res, next, collectionName){
-//   console.log("111111111111")
-//   return next()
-// })
-
-//app.use(express.static(directory));
-
-//서버 컨트롤러 호출 index.js
+//라우터
 var index = require('./routes/index');
 app.use('/', index);
 
 
 app.listen(port, ()=>{
 
-	console.log('Example app listening on port 3000!')
+	console.log('node server start!! port 3000!')
 })
 
 

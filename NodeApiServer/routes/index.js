@@ -5,11 +5,9 @@ var router = express.Router();
 //mongo db 연결
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
-
 var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', function() {
-	// CONNECTED TO MONGODB SERVER
 	console.log("Connected to mongod server");
 });
 
@@ -26,8 +24,8 @@ router.get('/api/:collectionName', function(req, res) {
 		var jsonData = {};
 		jsonData[collectionName + "s"] = results;
 		// 이미 json 형태이기 때문에 json함수 사용안해도 된다.
-		// res.json(jsonData);
-		res.send(jsonData);
+//		res.send(jsonData);
+		res.json(jsonData);
 	})
 });
 
@@ -40,23 +38,27 @@ router.param('collectionName', function(req, res, next, collectionName) {
 // 특정 이름 조회(api용)
 router.get('/api/:collectionName/:key', function(req, res) {
 	var collectionName = req.params.collectionName;
-	var keyVal = req.params.key;
-	var keyData = {};
+	var key = req.params.key;
+	var jsonData = {};
+	
+	// 동적으로 table 조회 하기 위해
+	var keyName = "";
 	if(collectionName=="user"){
 		keyName = "name";
 	}else if(collectionName=="note"){
 		keyName = "title";
 	}
-	keyData[keyName] = keyVal;
+	jsonData[keyName] = key;
 	
-	req.collection.findOne(keyData, function(err, result) {
+	req.collection.findOne(jsonData, function(err, result) {
 		if (err) return next(err)
 		if (!result) return res.json({ "result" : "No Notes to display."});
 
 		var jsonData = {};
 		jsonData[collectionName + "s"] = result;
 
-		res.send(jsonData);
+//		res.send(jsonData);
+		res.json(jsonData);
 	})
 })
 //_id 값을 그냥 넘겨주면 안된다. ObjectID로 변환
@@ -71,6 +73,7 @@ router.post('/api/:collectionName/save',(req, res, next) => {
 	var user = req.body.user;
 	var regdate = req.body.regdate;
 	
+	//2. json 형태로 만든다.
 	var data = {
 		"_id": objectId,
 		"title": title,
@@ -82,13 +85,14 @@ router.post('/api/:collectionName/save',(req, res, next) => {
 	console.log('save');
 	console.log(req.body);
 	 
-		
+	//3. db에 저장한다.	
 	req.collection.save(data, function(err, result) {
 		if (err) return next(err)
 		console.log('result : '+result);
          res.json({
          	"result":"success"
          });
+         
      });
 })
 
