@@ -4,14 +4,18 @@ var router = express.Router();
 
 //mongo db 연결
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost:27017/test');
 var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', function() {
 	console.log("Connected to mongod server");
 });
 
-
+//url 패턴 중 collectionName 을 db table로 지정
+router.param('collectionName', function(req, res, next, collectionName) {
+	req.collection = db.collection(collectionName)
+	return next()
+});
 
 // 해당 테이블 전체 조회
 router.get('/api/:collectionName', function(req, res) {
@@ -28,12 +32,6 @@ router.get('/api/:collectionName', function(req, res) {
 		res.json(jsonData);
 	})
 });
-
-//url 패턴 중 collectionName 을 db table로 지정
-router.param('collectionName', function(req, res, next, collectionName) {
-	req.collection = db.collection(collectionName)
-	return next()
-})
 
 // 특정 이름 조회(api용)
 router.get('/api/:collectionName/:key', function(req, res) {
@@ -57,7 +55,6 @@ router.get('/api/:collectionName/:key', function(req, res) {
 		var jsonData = {};
 		jsonData[collectionName + "s"] = result;
 
-//		res.send(jsonData);
 		res.json(jsonData);
 	})
 })
